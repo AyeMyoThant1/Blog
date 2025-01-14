@@ -1,14 +1,21 @@
+<?php  session_start(); ?>
 <?php require_once "../layout/header.php" ?>
 <?php require_once "../layout/nav.php" ?>
 <?php require_once "../layout/sidebar.php" ?>
 <?php require_once "../db/database.php" ?>
 
-<?php
+
+<?php 
+
+
 if (!isset($_SESSION['user'])) {
-  header('location:login.php');
+  header("Location: ./login.php");
 }
+
+
 ?>
 <main id="main" class="main">
+
   <div class="container">
     <div class="card">
       <div class="card-header">

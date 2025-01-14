@@ -9,12 +9,11 @@ require_once "../db/database.php";
      $sql->bindValue(':email' , $email);
      $sql->execute();   
      $result = $sql->fetch(PDO::FETCH_ASSOC);
+ 
         if($result){
             if($result['password'] == $pwd){
                 
-                $_SESSION['user'] = $result['email'];
-                $_SESSION['user_id'] = $result['id'];
-                
+                $_SESSION['user'] = ['email'=>$result['email'],  'id'=>$result['id']];
                 header('location:../admin/index.php');
         }
         

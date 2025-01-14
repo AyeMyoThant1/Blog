@@ -1,4 +1,5 @@
 <?php 
+session_start();    
 require_once "db/database.php";
 if($_POST){
     $email = $_POST['email'];
@@ -16,7 +17,7 @@ if($_POST){
             $_SESSION['user'] = $result['email'];
             $_SESSION['user_id'] = $result['id'];
 
-            echo "<script>alert('Login successful'); window.location.href = 'login.php';</script>";
+            echo "<script>alert('Login successful'); window.location.href = 'index.php';</script>";
            
         }
        

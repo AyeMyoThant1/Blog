@@ -3,15 +3,17 @@
 <?php  require_once "../layout/nav.php" ?>
 <?php  require_once "../layout/sidebar.php" ?>
 <?php require_once "../db/database.php" ?>
-
 <?php 
-
+//var_dump($_SESSION['user_id']);
 if($_POST){
-  $file = 'images/'.($_FILES['image']['name']);
+  $image = $_FILES['image']['name'];
+  $tempname = $_FILES['image']['tmp_name'];
+  var_dump($tempname);
+  move_uploaded_file($tempname, "./image/$image");
     $title = $_POST['title'];
     $content = $_POST['content'];
-    $image = $_FILES['image']['name'];
-    move_uploaded_file($_FILES['image']['tmp_name'],$file);
+    $sessionid = $_SESSION['user_id'];  
+    
 
     
     
@@ -19,12 +21,12 @@ if($_POST){
     $sql->bindParam(':title',$title);
     $sql->bindParam(':content',$content);
     $sql->bindParam(':image',$image);
-    $sql->bindParam(':author_id',$_SESSION['user_id']);
+    $sql->bindParam(':author_id',$sessionid);
     $sql->execute();
 
     
     
-    echo '<script>window.location="index.php";</script>';
+   echo '<script>window.location="index.php";</script>';
     
     
 }
