@@ -1,8 +1,11 @@
+<?php 
+session_start(); ?>
+
 <?php require_once "db/database.php"; ?>
 <?php 
-     session_start();
+
     $Id = $_GET['id'];
-    $sql = $pdo->prepare("SELECT * FROM `posts` where id = $Id");
+    $sql = $pdo->prepare("SELECT * FROM `post` where id = $Id");
     $sql->execute();
     $result = $sql->fetchAll(PDO::FETCH_ASSOC);
     
@@ -16,7 +19,6 @@
        $sql->bindParam(':post_id',$post_id);
        $sql->execute();
        $result = $sql->fetchAll(PDO::FETCH_ASSOC);
-        echo "<pre>";
         
     
    }
@@ -26,18 +28,24 @@
      $sql = $pdo->prepare("SELECT * FROM `comments` where post_id = $Id");
      $sql->execute();
      $Commentresult = $sql->fetchAll(PDO::FETCH_ASSOC);
-     $atuhor_id = $Commentresult[0]['author_id'];   
-   
-     $sql = $pdo->prepare("SELECT * FROM `user` where id = $atuhor_id");  
-     $sql->execute();
-     $Userresult = $sql->fetchAll(PDO::FETCH_ASSOC); 
-
-    //die(var_dump($Userresult));
-
-    //echo '<script>window.location="blogdeatil.php?id='.$Id.'";</script>';
-
+    // var_dump($Commentresult);
     
-    //die(var_dump($Userresult));
+
+    $Userresult = [];
+        
+     if($Commentresult){
+        foreach($Commentresult as $key => $value){
+        
+            $atuhor_id = $Commentresult[$key]['author_id'];
+        
+            $sql = $pdo->prepare("SELECT * FROM `user` where id = $atuhor_id");  
+            $sql->execute();
+            $Userresult[]= $sql->fetchAll(PDO::FETCH_ASSOC); 
+        }
+       
+
+     }
+   
    }
    
   
@@ -55,41 +63,45 @@
 </head>
 <body>
 
-    <div class="container">
-    <div class="card" style="background-color:azure;
-    width: 50%; margin: auto; margin-top: 50px;">
+<div class="container">
+    <div class="card" style="background-color: azure; max-width: 600px; margin: auto; margin-top: 30px; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 10px;">
+        
         <?php foreach($result as $post): ?>
-                <div class="card-header">
-                    <h3 class="text-center"><?php echo $post['title'] ?> </h3> 
-                </div>
-                <div class="card-body">
-                    <img src="admin/image/<?php echo $post['image'] ?>" alt="" style="width:100%; height:auto;">
-                    <div><?php echo $post['content'] ?></div>
-                </div>
-                
-                <?php endforeach; ?>
-              
-                 
-
-                <div class="card-footer">
-
-                  
-                <div class="comment">
-                    <h5>Comments</h5>
-                
-                    <span>name -><?= $Userresult[0]['name'] ?></span></br>
-                    <span><?php echo $Commentresult[0]['content'] ?></span>
-                
-                 
-                    <form action="" method="POST">
-                   
-                    <input type="text" name="comment" id="comment" class="form-control mt-3" placeholder="Add comment">
-                
-                    </form>
+            <div class="card-header text-center">
+                <h3><?php echo htmlspecialchars($post['title']); ?></h3>
             </div>
-            <a href="index.php" class="btn btn-primary">back</a>
+            <div class="card-body text-center">
+                <img src="admin/image/<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image" style="width:100%; height:auto; border-radius:10px;">
+                <div style="margin-top: 10px; font-size: 16px; line-height: 1.5;">
+                    <?php echo nl2br(htmlspecialchars($post['context'])); ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+        
+        <div class="card-footer">
+            <div class="comment">
+                <h5>Comments</h5>
+                <?php if (!empty($Commentresult)): ?>
+                    <?php foreach ($Commentresult as $key => $comment): ?>
+                        <div style="margin-bottom: 10px; padding: 10px; border-bottom: 1px solid #ddd;">
+                            <strong><?php echo htmlspecialchars($Userresult[$key][0]['name'] ?? 'Anonymous'); ?>:</strong><br>
+                            <span><?php echo nl2br(htmlspecialchars($comment['content'])); ?></span>
+                        </div>
+                    <?php endforeach; ?>
+                
+                    
+                <?php endif; ?>
+            </div>
+            
+            <form action="" method="POST" style="margin-top: 15px;">
+                <input type="text" name="comment" id="comment" class="form-control" placeholder="Add a comment" required>
+                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+            </form>
         </div>
-
+        
+        <a href="index.php" class="btn btn-primary mt-3" style="width: 100%;">Back</a>
     </div>
+</div>
+
 </body>
 </html>

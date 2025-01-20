@@ -1,9 +1,13 @@
 <?php session_start(); ?>
 <?php require_once "../layout/header.php" ?>
-<?php  require_once "../layout/nav.php" ?>
+<?php require_once "../layout/nav.php" ?>
 <?php  require_once "../layout/sidebar.php" ?>
 <?php require_once "../db/database.php" ?>
 <?php 
+$title = $titleErr = "";
+$content = $contentErr = "";
+$image = $imgErr = "";
+$invalid = false ;
 //var_dump($_SESSION['user_id']);
 if($_POST){
   $image = $_FILES['image']['name'];
@@ -13,13 +17,25 @@ if($_POST){
     $title = $_POST['title'];
     $content = $_POST['content'];
     $sessionid = $_SESSION['user_id'];  
-    
 
-    
-    
-    $sql = $pdo->prepare("INSERT INTO `posts`(`title`, `content`, `author_id` ,`image`) VALUES (:title,:content,:author_id , :image)");
+    if($title == ""){
+      $titleErr = "title cannot be Blank";
+      $invalid = true;
+      }
+  
+      if($content == "") {
+          $contentErr = "content cannot be blank";
+          $invalid = true;
+      }
+      if($image == ""){
+          $imgErr = "Please choice images";
+          $invalid = true;
+      }
+
+      if(!$invalid){
+        $sql = $pdo->prepare("INSERT INTO `post`(`title`, `context`, `author_id` ,`image`) VALUES (:title,:context,:author_id , :image)");
     $sql->bindParam(':title',$title);
-    $sql->bindParam(':content',$content);
+    $sql->bindParam(':context',$content);
     $sql->bindParam(':image',$image);
     $sql->bindParam(':author_id',$sessionid);
     $sql->execute();
@@ -27,6 +43,13 @@ if($_POST){
     
     
    echo '<script>window.location="index.php";</script>';
+
+      }
+    
+
+    
+    
+    
     
     
 }
@@ -43,17 +66,20 @@ if($_POST){
            <form action="" method="POST" enctype="multipart/form-data">
                     <div class="form-group mt-3">
                         <label for="title">Title</label>
-                        <input type="text" class="form-control" name ="title" placeholder="Title" style ="width:300px; height:50px" required>  
-                    </div>  
+                        <input type="text" class="form-control" name ="title" placeholder="Title" style ="width:300px; height:50px" >  
+                        <p class="err"><?=$titleErr?></p>
+                      </div>  
                     <div class="form-group mt-3">
                         <label for="content" class="form-label">content</label>
-                        <input type="text" class="form-control" name ="content" placeholder="content" style ="width:300px; height:50px" required>  
-                    </div>
+                        <input type="text" class="form-control" name ="content" placeholder="content" style ="width:300px; height:50px" >  
+                        <p class="err"><?=$contentErr?></p>
+                      </div>
 
                     <div class="form-group mt-3">
                         <label for="content" class="form-label">Image</label>
-                        <input type="file" class="form-control" name ="image" placeholder="content" style ="width:300px; height:50px" required>  
-                    </div>
+                        <input type="file" class="form-control" name ="image" placeholder="content" style ="width:300px; height:50px" >  
+                        <p class="err"><?=$imgErr?></p>
+                      </div>
 
                     <button type="submit" class="btn btn-primary mt-4">submit</button>
                     <a href="index.php" class="btn btn-danger mt-4">Back</a>

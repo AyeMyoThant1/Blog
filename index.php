@@ -20,18 +20,12 @@ if(!isset($_SESSION['user'])){
     
 <div class="container">
 <?php 
-    $sql = $pdo->prepare("SELECT * FROM `posts`");
+    $sql = $pdo->prepare("SELECT * FROM `post`");
     $sql->execute();
     $result = $sql->fetchAll(PDO::FETCH_ASSOC);
-    
-    
-   
     ?>
-    
-    <div class="row mt-4">
 
-   
-
+ <div class="row mt-4">
     <?php foreach($result as $post): ?>
         <div class="col-4 mt-2">
             <div class="card" style="background-color:azure;">

@@ -1,20 +1,23 @@
 <?php 
 session_start();
+
+
 require_once "../db/database.php";
- if($_POST){
+ if(isset($_POST['submit'])){
      $email = $_POST['email'];
      $pwd = $_POST['pwd'];
 
      $sql =$pdo->prepare("SELECT * FROM `user` WHERE `email` = :email");
      $sql->bindValue(':email' , $email);
-     $sql->execute();   
+     $sql->execute();
      $result = $sql->fetch(PDO::FETCH_ASSOC);
- 
+    
         if($result){
             if($result['password'] == $pwd){
+         setcookie("user", json_encode($result), time() + (86400 * 30), "/");
                 
-                $_SESSION['user'] = ['email'=>$result['email'],  'id'=>$result['id']];
-                header('location:../admin/index.php');
+            
+               header('location:../admin/index.php');
         }
         
  }
@@ -47,7 +50,7 @@ require_once "../db/database.php";
                         <input class="form-control" name ="pwd" placeholder="password" style ="width:300px; height:50px">
                     </div>
 
-                    <button type="submit" class="btn btn-primary mt-4">submit</button>
+                    <button type="submit" name="submit" class="btn btn-primary mt-4">submit</button>
 
                 </form>
             </div>

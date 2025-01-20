@@ -7,12 +7,12 @@
 <?php 
  if ($_GET['id']) {
     if($_POST){
-        $id = $_POST['id'];
+        $id = $_GET['id'];
         $title = $_POST['title'];
           $content = $_POST['content'];
          
          
-         $sql = $pdo->prepare("UPDATE `posts` SET `title` = :title, `content` = :content WHERE `id` = $id");
+         $sql = $pdo->prepare("UPDATE `post` SET `title` = :title, `context` = :content WHERE `id` = $id");
          $sql->bindParam(':title',$title);
          $sql->bindParam(':content',$content);
          $sql->execute();
@@ -22,7 +22,7 @@
  }
  $ID = $_GET['id'];
     
- $sql = $pdo->prepare("SELECT * FROM `posts` WHERE `id` = $ID");
+ $sql = $pdo->prepare("SELECT * FROM `post` WHERE `id` = $ID");
  $sql->execute();
  $result = $sql->fetch(PDO::FETCH_ASSOC);
  
@@ -51,7 +51,7 @@
                     </div>  
                     <div class="form-group mt-3">
                         <label for="content" class="form-label">content</label>
-                        <input type="text" class="form-control" name ="content" value="<?php echo $result['content']?>"  placeholder="content" style ="width:300px; height:50px" required>  
+                        <input type="text" class="form-control" name ="content" value="<?php echo $result['context']?>"  placeholder="content" style ="width:300px; height:50px" required>  
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-4">submit</button>

@@ -3,15 +3,16 @@
 <?php require_once "../layout/nav.php" ?>
 <?php require_once "../layout/sidebar.php" ?>
 <?php require_once "../db/database.php" ?>
-
-
 <?php 
+$user = json_decode($_COOKIE['user'], true);
 
-
-if (!isset($_SESSION['user'])) {
-  header("Location: ./login.php");
+if (!$user) {
+  echo "<script> window.location.href = 'login.php';</script>";
 }
 
+var_dump($_SESSION['role']);
+ 
+ 
 
 ?>
 <main id="main" class="main">
@@ -38,14 +39,16 @@ if (!isset($_SESSION['user'])) {
 
               if(isset($_POST['search'])){
                 $search = $_POST['search'];
-                $sql = $pdo->prepare("SELECT * FROM posts WHERE title LIKE '%$search%' OR content LIKE '%$search%'");
+                $sql = $pdo->prepare("SELECT * FROM post WHERE title LIKE '%$search%' OR content LIKE '%$search%'");
                  $sql->execute();
                 $result = $sql->fetchAll(PDO::FETCH_ASSOC);
               }else{
-                $sql = $pdo->prepare("SELECT * FROM `posts`");
+                $sql = $pdo->prepare("SELECT * FROM `post`");
                 $sql->execute();
                 $result = $sql->fetchAll(PDO::FETCH_ASSOC);
               }
+              echo  "<pre>";
+              //die(var_dump($result));
 
             ?>
             <?php if ($result) {
@@ -55,10 +58,10 @@ if (!isset($_SESSION['user'])) {
                 <tr>
                   <td><?php echo $i ?></td>
                   <td><?php echo $post['title'] ?></td>
-                  <td><?php echo substr($post['content'], 0, 20)  ?></td>
+                  <td><?php echo substr($post['context'], 0, 20)  ?></td>
                   <td>
-                    <a href="edit.php?id=<?php echo $result[0]['id'] ?> " class="btn btn-primary">edit</a>
-                    <a href="delete.php?id=<?php echo $result[0]['id'] ?>"class="btn btn-danger"
+                    <a href="edit.php?id=<?php echo $post['id'] ?> " class="btn btn-primary">edit</a>
+                    <a href="delete.php?id=<?php echo $post['id'] ?>"class="btn btn-danger"
                     onclick="return confirm('Are you sure to Delete   ?')">delete</a>
                   </td>
                 </tr>

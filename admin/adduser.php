@@ -3,24 +3,49 @@
 <?php require_once "../db/database.php"; ?>
 <?php require_once "../layout/sidebar.php" ?>   
 <?php
+$name = $nameErr ="";
+$email = $eamilErr = "";
+$password = $pwdErr ="";
+$invalid = false;
+
 if($_POST){
     $name = $_POST['name'];
     $email = $_POST['email'];
     $password = $_POST['password'];
     $role = $_POST['role'];
-    if(empty($role)){
-        $role = 0;
-    }else{
-        $role = 1;
+
+   if($name == ""){
+    $nameErr = "Name cannot be Blank";
+    $invalid = true;
     }
-    $sql = $pdo->prepare("INSERT INTO `user`(`name`, `email`,`password`, `role`) VALUES (:name,:email,:password,:role)");
-    $sql->bindParam(':name',$name);
-    $sql->bindParam(':email',$email);
-    $sql->bindParam(':password',$password);
-    $sql->bindParam(':role',$role);
-    $sql->execute();
-    echo '<script>window.location="user_list.php";</script>';
+
+    if($email == "") {
+        $eamilErr = "Email cannot be blank";
+        $invalid = true;
+    }
+
+    if($password == ""){
+        $pwdErr = "Password cannot be blank";
+        $invalid = true;
+    }
+
     
+    if(!$invalid){
+        if(empty($role)){
+            $role = 0;
+        }else{
+            $role = 1;
+        }
+        $sql = $pdo->prepare("INSERT INTO `user`(`name`, `email`,`password`, `role`) VALUES (:name,:email,:password,:role)");
+        $sql->bindParam(':name',$name);
+        $sql->bindParam(':email',$email);
+        $sql->bindParam(':password',$password);
+        $sql->bindParam(':role',$role);
+        $sql->execute();
+        echo '<script>window.location="user_list.php";</script>';
+    }
+
+   
 }
 
 
@@ -41,15 +66,18 @@ if($_POST){
             <form action="" method="POST">
                     <div class="form-group mt-4">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" name="name" placeholder="Name" style="width:300px; height:50px" required>
+                        <input type="text" class="form-control" name="name" placeholder="Name" style="width:300px; height:50px">
+                        <p class="err"><?=$nameErr ?></p>
                     </div>
                     <div class="form-group mt-4">
                         <label for="name">Email</label>
-                        <input type="text" class="form-control" name="email" placeholder="Name" style="width:300px; height:50px" required>
+                        <input type="text" class="form-control" name="email" placeholder="Name" style="width:300px; height:50px">
+                        <p class="err"> <?=$eamilErr?></p>
                     </div>
                     <div class="form-group mt-4">
                         <label for="name">Password</label>
-                        <input type="text" class="form-control" name="password" placeholder="Name" style="width:300px; height:50px" required>
+                        <input type="text" class="form-control" name="password" placeholder="Name" style="width:300px; height:50px">
+                        <p class="err"> <?=$pwdErr?></p>
                     </div>
                     <div class="form-group mt-4">
                         <label for="name">Admin</label>
