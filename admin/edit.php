@@ -1,8 +1,9 @@
-<?php session_start(); ?>
+
 <?php require_once "../layout/header.php" ?>
-<?php  //require_once "../layout/nav.php" ?>
-<?php  //require_once "../layout/sidebar.php" ?>
+<?php  require_once "../layout/nav.php" ?>
+<?php  require_once "../layout/sidebar.php" ?>
 <?php require_once "../db/database.php" ?>
+<?php require_once "../db/token.php" ?>
 
 <?php 
  if ($_GET['id']) {
@@ -44,14 +45,15 @@
         </div>
         <div class="card-body">
            <form action="" method="POST">
+           <input type="hidden" name="_token" value="<?php echo $_SESSION['_token'] ?>">
               <input type="hidden" name="id" value="<?php echo $result['id']?>">
                     <div class="form-group mt-3">
                         <label for="title">Title</label>
-                        <input type="text" class="form-control" name ="title" value="<?php echo $result['title']?>" placeholder="Title" style ="width:300px; height:50px" required>  
+                        <input type="text" class="form-control" name ="title" value="<?php echo escape($result['title'])?>"   placeholder="Title" style ="width:300px; height:50px" required>  
                     </div>  
                     <div class="form-group mt-3">
                         <label for="content" class="form-label">content</label>
-                        <input type="text" class="form-control" name ="content" value="<?php echo $result['context']?>"  placeholder="content" style ="width:300px; height:50px" required>  
+                        <input type="text" class="form-control" name ="content" value="<?php echo escape($result['context'])?>"  placeholder="content" style ="width:300px; height:50px" required>  
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-4">submit</button>

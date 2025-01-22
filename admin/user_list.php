@@ -1,8 +1,9 @@
-<?php  session_start(); ?>
+
 <?php require_once "../layout/header.php" ?>
 <?php require_once "../layout/nav.php" ?>
 <?php require_once "../db/database.php"; ?>
 <?php require_once "../layout/sidebar.php" ?>
+<?php require_once "../db/token.php"; ?>
 
 
 <?php
@@ -32,17 +33,24 @@ if(!isset($_SESSION['user_id'])){
             </thead>
             <tbody>
                 <?php 
+                
+              if(isset($_POST['search'])){
+                $search = $_POST['search'];
+                $sql = $pdo->prepare("SELECT * FROM user WHERE `name` LIKE '%$search%' OR `email` LIKE '%$search%'");
+                 $sql->execute();
+                $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+              } else{
                 $sql = $pdo->prepare("SELECT * FROM `user`");
                 $sql->execute();
                 $result = $sql->fetchAll(PDO::FETCH_ASSOC);
-             
+            }
                 $i = 1;
                 foreach($result as $user):
                 ?>
                 <tr>
                     <td><?php echo $i?></td>
-                    <td><?php echo $user['name'] ?></td>
-                    <td><?php echo $user['email'] ?></td>
+                    <td><?php echo escape($user['name']) ?></td>
+                    <td><?php echo escape($user['email']) ?></td>
                     <td><?php  if($user['role'] == 1){
                         echo "Admin";
                     }else{

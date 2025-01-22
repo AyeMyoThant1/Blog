@@ -68,12 +68,12 @@ session_start(); ?>
         
         <?php foreach($result as $post): ?>
             <div class="card-header text-center">
-                <h3><?php echo htmlspecialchars($post['title']); ?></h3>
+                <h3><?php echo ($post['title']); ?></h3>
             </div>
             <div class="card-body text-center">
-                <img src="admin/image/<?php echo htmlspecialchars($post['image']); ?>" alt="Post Image" style="width:100%; height:auto; border-radius:10px;">
+                <img src="admin/image/<?php echo ($post['image']); ?>" alt="Post Image" style="width:100%; height:auto; border-radius:10px;">
                 <div style="margin-top: 10px; font-size: 16px; line-height: 1.5;">
-                    <?php echo nl2br(htmlspecialchars($post['context'])); ?>
+                    <?php echo nl2br(($post['context'])); ?>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -84,8 +84,8 @@ session_start(); ?>
                 <?php if (!empty($Commentresult)): ?>
                     <?php foreach ($Commentresult as $key => $comment): ?>
                         <div style="margin-bottom: 10px; padding: 10px; border-bottom: 1px solid #ddd;">
-                            <strong><?php echo htmlspecialchars($Userresult[$key][0]['name'] ?? 'Anonymous'); ?>:</strong><br>
-                            <span><?php echo nl2br(htmlspecialchars($comment['content'])); ?></span>
+                            <strong><?php echo ($Userresult[$key][0]['name'] ?? 'Anonymous'); ?>:</strong><br>
+                            <span><?php echo (($comment['content'])); ?></span>
                         </div>
                     <?php endforeach; ?>
                 

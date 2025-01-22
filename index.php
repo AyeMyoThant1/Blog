@@ -1,6 +1,9 @@
 <?php 
-session_start();
+
 require_once "db/database.php";
+require_once "db/database.php";
+
+
 
 if(!isset($_SESSION['user'])){
     echo "<script>alert('Please login first'); window.location.href = 'login.php';</script>";
@@ -30,7 +33,7 @@ if(!isset($_SESSION['user'])){
         <div class="col-4 mt-2">
             <div class="card" style="background-color:azure;">
                 <div class="card-header">
-                    <h3 class="text-center"><?php echo $post['title'] ?> </h3> 
+                    <h3 class="text-center"><?php echo escape($post['title']) ?> </h3> 
                 </div>
                 <div class="card-body">
                     <a href="blogdeatil.php?id=<?php echo $post['id'] ?>"><img src="admin/image/<?php echo $post['image'] ?>" alt="" style="width:100%; height:200px"></a>

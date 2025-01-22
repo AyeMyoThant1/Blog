@@ -1,18 +1,15 @@
-<?php  session_start(); ?>
+
 <?php require_once "../layout/header.php" ?>
 <?php require_once "../layout/nav.php" ?>
 <?php require_once "../layout/sidebar.php" ?>
 <?php require_once "../db/database.php" ?>
+<?php require_once "../db/token.php" ?>
 <?php 
 $user = json_decode($_COOKIE['user'], true);
 
 if (!$user) {
   echo "<script> window.location.href = 'login.php';</script>";
 }
-
-var_dump($_SESSION['role']);
- 
- 
 
 ?>
 <main id="main" class="main">
@@ -39,7 +36,7 @@ var_dump($_SESSION['role']);
 
               if(isset($_POST['search'])){
                 $search = $_POST['search'];
-                $sql = $pdo->prepare("SELECT * FROM post WHERE title LIKE '%$search%' OR content LIKE '%$search%'");
+                $sql = $pdo->prepare("SELECT * FROM post WHERE title LIKE '%$search%' OR context LIKE '%$search%'");
                  $sql->execute();
                 $result = $sql->fetchAll(PDO::FETCH_ASSOC);
               }else{
@@ -57,8 +54,8 @@ var_dump($_SESSION['role']);
             ?>
                 <tr>
                   <td><?php echo $i ?></td>
-                  <td><?php echo $post['title'] ?></td>
-                  <td><?php echo substr($post['context'], 0, 20)  ?></td>
+                  <td><?php echo escape($post['title']) ?></td>
+                  <td><?php echo escape(substr($post['context'], 0, 20))  ?></td>
                   <td>
                     <a href="edit.php?id=<?php echo $post['id'] ?> " class="btn btn-primary">edit</a>
                     <a href="delete.php?id=<?php echo $post['id'] ?>"class="btn btn-danger"

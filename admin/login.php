@@ -6,17 +6,17 @@ require_once "../db/database.php";
  if(isset($_POST['submit'])){
      $email = $_POST['email'];
      $pwd = $_POST['pwd'];
-
+    
      $sql =$pdo->prepare("SELECT * FROM `user` WHERE `email` = :email");
      $sql->bindValue(':email' , $email);
      $sql->execute();
      $result = $sql->fetch(PDO::FETCH_ASSOC);
     
         if($result){
-            if($result['password'] == $pwd){
+            if(password_verify($pwd, $result['password'])){
          setcookie("user", json_encode($result), time() + (86400 * 30), "/");
-                
-            
+                $_SESSION['user_id'] = $result['id'];
+
                header('location:../admin/index.php');
         }
         

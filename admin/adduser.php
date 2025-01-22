@@ -1,6 +1,7 @@
 <?php require_once "../layout/header.php" ?>
 <?php require_once "../layout/nav.php"; ?>
 <?php require_once "../db/database.php"; ?>
+<?php require_once "../db/token.php"; ?>
 <?php require_once "../layout/sidebar.php" ?>   
 <?php
 $name = $nameErr ="";
@@ -11,7 +12,7 @@ $invalid = false;
 if($_POST){
     $name = $_POST['name'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $role = $_POST['role'];
 
    if($name == ""){
@@ -64,6 +65,7 @@ if($_POST){
             </div>
             <div class="card-body">
             <form action="" method="POST">
+            <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
                     <div class="form-group mt-4">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" name="name" placeholder="Name" style="width:300px; height:50px">

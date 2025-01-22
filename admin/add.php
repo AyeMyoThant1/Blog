@@ -1,14 +1,15 @@
-<?php session_start(); ?>
+
 <?php require_once "../layout/header.php" ?>
-<?php require_once "../layout/nav.php" ?>
+<?php //srequire_once "../layout/nav.php" ?>
 <?php  require_once "../layout/sidebar.php" ?>
 <?php require_once "../db/database.php" ?>
+<?php require_once "../db/token.php" ?>
 <?php 
 $title = $titleErr = "";
 $content = $contentErr = "";
 $image = $imgErr = "";
 $invalid = false ;
-//var_dump($_SESSION['user_id']);
+$id =$_SESSION['user_id'];
 if($_POST){
   $image = $_FILES['image']['name'];
   $tempname = $_FILES['image']['tmp_name'];
@@ -17,6 +18,8 @@ if($_POST){
     $title = $_POST['title'];
     $content = $_POST['content'];
     $sessionid = $_SESSION['user_id'];  
+    //die(var_dump($id));
+
 
     if($title == ""){
       $titleErr = "title cannot be Blank";
@@ -37,7 +40,7 @@ if($_POST){
     $sql->bindParam(':title',$title);
     $sql->bindParam(':context',$content);
     $sql->bindParam(':image',$image);
-    $sql->bindParam(':author_id',$sessionid);
+    $sql->bindParam(':author_id',$id);
     $sql->execute();
 
     
@@ -64,6 +67,7 @@ if($_POST){
         </div>
         <div class="card-body">
            <form action="" method="POST" enctype="multipart/form-data">
+           <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>"> 
                     <div class="form-group mt-3">
                         <label for="title">Title</label>
                         <input type="text" class="form-control" name ="title" placeholder="Title" style ="width:300px; height:50px" >  

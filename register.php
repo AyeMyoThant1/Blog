@@ -1,16 +1,16 @@
 <?php 
 
 require_once "db/database.php";
-
+require_once "db/token.php";
 $name = $nameErr ="";
 $email = $emailErr = "";
-$password = $pwdErr ="";
+$pwd = $pwdErr ="";
 $invalid = false;
 
 if($_POST){
     $name = $_POST['name'];
     $email = $_POST['email'];
-    $pwd = $_POST['pwd'];
+    $pwd = password_hash($_POST['pwd'], PASSWORD_DEFAULT);
 
     $sql = $pdo->prepare("SELECT * FROM `user` WHERE `email` = :email");
     $sql->bindValue(':email' , $email);
@@ -26,7 +26,7 @@ if($_POST){
             $invalid = true;
         }
     
-        if($password == ""){
+        if($pwd == ""){
             $pwdErr = "Password cannot be blank";
             $invalid = true;
         }
@@ -41,7 +41,8 @@ if($_POST){
                 $sql->bindParam(':email',$email);
                 $sql->bindParam(':password',$pwd);
                 $sql->execute();
-                echo '<script>alert(register success).window.location="login.php";</script>';
+
+                echo "<script>alert('Register success'); window.location='login.php';</script>";
             }
 
         }
@@ -67,6 +68,7 @@ if($_POST){
             <h3 class ="text-center">Register</h3>
             <div class="card-body mx-auto">
                 <form action="" method="POST">
+                <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
                     <div class="form-group mt-3">
                         <label for="exampleFormControlInput1" class="form-label">Name</label>
                         <input type="text" class="form-control" name ="name" placeholder="name" style ="width:300px; height:50px">

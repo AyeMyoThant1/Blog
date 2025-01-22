@@ -1,3 +1,4 @@
+<?php require_once "../db/token.php" ?>
 <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
@@ -8,7 +9,9 @@
     </div><!-- End Logo -->
 
     <div class="search-bar">
-      <form class="search-form d-flex align-items-center" method="POST" action="index.php">
+      <form class="search-form d-flex align-items-center" method="POST" action="">
+       <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
+
         <input type="text" name="search" placeholder="Search" title="Enter search keyword">
         <button type="submit" title="Search"><i class="bi bi-search"></i></button>
       </form>

@@ -1,7 +1,8 @@
 <?php require_once "../layout/header.php" ?>
-<?php //require_once "../layout/nav.php"; ?>
+<?php require_once "../layout/nav.php"; ?>
 <?php require_once "../db/database.php"; ?>
-<?php //require_once "../layout/sidebar.php" ?>   
+<?php require_once "../layout/sidebar.php" ?>  
+<?php require_once "../db/token.php"; ?> 
 <?php
 if($_GET['id']){
 
@@ -43,17 +44,18 @@ if($_GET['id']){
             </div>
             <div class="card-body">
             <form action="" method="POST">
+             <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
                     <div class="form-group mt-4">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" name="name" value="<?= $result['name'] ?> " placeholder="Name" style="width:300px; height:50px" required>
+                        <input type="text" class="form-control" name="name" value=" <?=  escape($result['name']) ?> " placeholder="Name" style="width:300px; height:50px" required>
                     </div>
                     <div class="form-group mt-4">
                         <label for="name">Email</label>
-                        <input type="text" class="form-control" name="email" value="<?= $result['email'] ?> " placeholder="Name" style="width:300px; height:50px" required>
+                        <input type="text" class="form-control" name="email" value="<?=  escape($result['email']) ?> " placeholder="Name" style="width:300px; height:50px" required>
                     </div>
                     <div class="form-group mt-4">
                         <label for="name">Admin</label>
-                        <input type ="checkbox" name="role" value="<?= $result['role'] ?> ">
+                        <input type ="checkbox" name="role" value="  <?=  escape($result['role']) ?> ">
                     </div>
         
                     <button type="submit" class="btn btn-primary mt-4">submit</button>

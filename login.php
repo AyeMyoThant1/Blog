@@ -1,34 +1,36 @@
 <?php 
-session_start();    
 require_once "db/database.php";
+require_once "db/token.php";
 $_SESSION['role'] = 0;
 $email = $emailErr = "";
-$password = $pwdErr ="";
+$pwd = $pwdErr = "";
 $invalid = false ;
 
 if($_POST){
     $email = $_POST['email'];
     $pwd = $_POST['pwd'];
 
-    $sql =$pdo->prepare("SELECT * FROM `user` WHERE `email` = :email AND `password` = :password");
-    $sql->bindValue(':email' , $email);
-    $sql->bindValue(':password' , $pwd);
-    $sql->execute();   
-    $result = $sql->fetch(PDO::FETCH_ASSOC);
-
+    
     if($email == ""){
         $emailErr = "Email cannot be blank";
         $invalid = true;
     }
     
-    if($password == ""){
+    if($pwd == ""){
         $pwdErr= "password cannot be blank";
         $invalid = true;
     }
   
     if(!$invalid){
+        $sql =$pdo->prepare("SELECT * FROM `user` WHERE `email` = :email ");
+        $sql->bindValue(':email' , $email);
+       // $sql->bindValue(':password' , $pwd);
+        $sql->execute();   
+        $result = $sql->fetch(PDO::FETCH_ASSOC);
+       // die(var_dump($result));
+
         if($result){
-            if($result['password'] == $pwd && $result['email'] == $email){
+            if(password_verify($pwd, $result['password']) && $result['email'] == $email){
     
                 $_SESSION['user'] = $result['email'];
                 $_SESSION['user_id'] = $result['id'];
@@ -63,6 +65,7 @@ if($_POST){
             <h3 class ="text-center">Login</h3>
             <div class="card-body mx-auto">
                 <form action="" method="POST">
+                <input type="hidden" name="_token" value="<?php echo $_SESSION['_token']; ?>">
                     <div class="form-group mt-3">
                         <label for="exampleFormControlInput1" class="form-label">Email address</label>
                         <input type="email" class="form-control" name ="email" placeholder="email" style ="width:300px; height:50px">
